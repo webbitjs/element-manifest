@@ -1,3 +1,5 @@
+import Joi from 'joi';
+
 import {
   attributesSchema,
   camelCaseSchema,
@@ -12,6 +14,10 @@ import {
   typeSchema
 } from './schemas';
 
+const testDefaultValueSchema = Joi.object({
+  type: typeSchema,
+  defaultValue: defaultValueSchema,
+});
 
 describe('schemas', () => {
   describe('typeSchema', () => {
@@ -83,6 +89,40 @@ describe('schemas', () => {
 
     it(`doesn't accept non-strings`, async () => {
       await expect(optionalStringSchema.validateAsync(0)).rejects.toThrow();
+    });
+  });
+
+  describe(`defaultValueSchema`, () => {
+    it(`accepts strings when type is 'String'`, async () => {
+      expect(
+        await testDefaultValueSchema.validateAsync({ type: 'String', defaultValue: 'some value' })
+      ).toEqual({ type: 'String', defaultValue: 'some value' })
+
+      expect(
+        await testDefaultValueSchema.validateAsync({ type: 'String' })
+      ).toEqual({ type: 'String', defaultValue: '' })
+    });
+
+    it(`doesn't accept strings when type is not 'String'`, async () => {
+      await expect(
+        testDefaultValueSchema.validateAsync({ type: 'Boolean', defaultValue: 'some value' })
+      ).rejects.toThrow();
+    });
+
+    it(`accepts booleans when type is 'Boolean'`, async () => {
+      expect(
+        await testDefaultValueSchema.validateAsync({ type: 'Boolean', defaultValue: true })
+      ).toEqual({ type: 'Boolean', defaultValue: true })
+
+      expect(
+        await testDefaultValueSchema.validateAsync({ type: 'Boolean' })
+      ).toEqual({ type: 'Boolean', defaultValue: false })
+    });
+
+    it(`doesn't accept booleans when type is not 'Boolean'`, async () => {
+      await expect(
+        testDefaultValueSchema.validateAsync({ type: 'Number', defaultValue: false })
+      ).rejects.toThrow();
     });
   });
 });

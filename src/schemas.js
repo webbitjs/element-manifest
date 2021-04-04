@@ -14,13 +14,12 @@ export const cssPropertyNameSchema = Joi.string()
 
 export const optionalStringSchema = Joi.string().empty('').default('');
 
-export const defaultValueSchema = Joi.any()
-  .when('type', { is: Joi.any().allow('String'), then: Joi.string().empty('').default('') })
-  .when('type', { is: Joi.any().allow('Boolean'), then: Joi.boolean().default(false) })
-  .when('type', { is: Joi.any().allow('Number'), then: Joi.number().default(0) })
-  .when('type', { is: Joi.any().allow('Array'), then: Joi.array().default([]) })
-  .when('type', { is: Joi.any().allow('Object'), then: Joi.object().default({}) });
-
+export const defaultValueSchema = Joi
+  .when('type', { is: 'String', then: Joi.string().empty('').default('') })
+  .when('type', { is: 'Boolean', then: Joi.boolean().default(false) })
+  .when('type', { is: 'Number', then: Joi.number().default(0) })
+  .when('type', { is: 'Array', then: Joi.array().default([]) })
+  .when('type', { is: 'Object', then: Joi.object().default({}) })
 
 export const nameWithDescriptionSchema = Joi.array().items(
   Joi.object({
