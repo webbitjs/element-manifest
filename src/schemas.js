@@ -1,44 +1,36 @@
-import {
-  object,
-  string,
-  array,
-  boolean,
-  number,
-  alternatives,
-  any,
-} from 'joi';
+import Joi from 'joi';
 
-export const typeSchema = any()
-  .allow('String', 'Boolean', 'Number', 'Array', 'Object');
+export const typeSchema = Joi.string()
+  .valid('String', 'Boolean', 'Number', 'Array', 'Object');
 
-export const kebabCaseSchema = string()
+export const kebabCaseSchema = Joi.string()
   .pattern(new RegExp('^([a-z][a-z0-9]*)(-[a-z0-9]+)*$'));
 
-export const camelCaseSchema = string()
+export const camelCaseSchema = Joi.string()
   .pattern(new RegExp('^[a-z]+((\d)|([A-Z0-9][a-z0-9]+))*([A-Z])?$'));
 
-export const cssPropertyNameSchema = string()
+export const cssPropertyNameSchema = Joi.string()
   .pattern(new RegExp('^\-\-[a-z]+(\-[a-z]+)*$'));
 
-export const optionalStringSchema = string().empty('').default('');
+export const optionalStringSchema = Joi.string().empty('').default('');
 
-export const defaultValueSchema = any()
-  .when('type', { is: any().allow('String'), then: string.empty('').default('') })
-  .when('type', { is: any().allow('Boolean'), then: boolean().default(false) })
-  .when('type', { is: any().allow('Number'), then: number().default(0) })
-  .when('type', { is: any().allow('Array'), then: array().default([]) })
-  .when('type', { is: any().allow('Object'), then: object().default({}) });
+export const defaultValueSchema = Joi.any()
+  .when('type', { is: Joi.any().allow('String'), then: Joi.string().empty('').default('') })
+  .when('type', { is: Joi.any().allow('Boolean'), then: Joi.boolean().default(false) })
+  .when('type', { is: Joi.any().allow('Number'), then: Joi.number().default(0) })
+  .when('type', { is: Joi.any().allow('Array'), then: Joi.array().default([]) })
+  .when('type', { is: Joi.any().allow('Object'), then: Joi.object().default({}) });
 
 
-  export const nameWithDescriptionSchema = array().items(
-  object({
-    name: string().required(),
+export const nameWithDescriptionSchema = Joi.array().items(
+  Joi.object({
+    name: Joi.string().required(),
     description: optionalStringSchema,
   })
 );
 
-export const attributesSchema = array().items(
-  object({
+export const attributesSchema = Joi.array().items(
+  Joi.object({
     name: kebabCaseSchema.required(),
     type: typeSchema.required(),
     description: optionalStringSchema,
@@ -46,32 +38,32 @@ export const attributesSchema = array().items(
   })
 );
 
-export const propertiesSchema = array().items(
-  object({
+export const propertiesSchema = Joi.array().items(
+  Joi.object({
     name: camelCaseSchema.required(),
     description: optionalStringSchema,
     type: typeSchema.required(),
     defaultValue: defaultValueSchema,
-    attribute: alternatives()
-      .try(kebabCaseSchema, any().allow(false))
+    attribute: Joi.alternatives()
+      .try(kebabCaseSchema, Joi.any().allow(false))
       .default(false),
-    reflect: boolean().default(false),
-    primary: boolean().default(false),
-    changeEvent: alternatives()
-      .try(string(), any().allow(false))
+    reflect: Joi.boolean().default(false),
+    primary: Joi.boolean().default(false),
+    changeEvent: Joi.alternatives()
+      .try(Joi.string(), Joi.any().allow(false))
       .default(false)
   })
 );
 
-export const cssPropertiesSchema = array().items(
-  object({
+export const cssPropertiesSchema = Joi.array().items(
+  Joi.object({
     name: cssPropertyNameSchema.required(),
     description: optionalStringSchema,
     defaultValue: optionalStringSchema
   })
 );
 
-export const elementSchema = object({
+export const elementSchema = Joi.object({
   name: kebabCaseSchema,
   description: optionalStringSchema,
   atttributes: attributesSchema,
