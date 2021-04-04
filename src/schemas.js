@@ -2,10 +2,10 @@ import {
   object,
   string,
   array,
-  any,
   boolean,
   number,
-  alternatives
+  alternatives,
+  any,
 } from 'joi';
 
 export const typeSchema = any()

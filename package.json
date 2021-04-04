@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "dist": "rollup -c"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,12 @@
     "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@babel/plugin-proposal-decorators": "^7.13.5",
     "@babel/preset-env": "^7.13.12",
-    "jest": "^26.6.3"
+    "@rollup/plugin-node-resolve": "^11.2.1",
+    "babel-jest": "^26.6.3",
+    "jest": "^26.6.3",
+    "rollup": "^2.44.0",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-uglify-es": "0.0.1"
   },
   "dependencies": {
     "joi": "^17.4.0"
