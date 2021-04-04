@@ -11,8 +11,10 @@ export default [
       name: 'webbitElementManifest'
     },
     plugins: [
-      resolve(),
-      babel()
+      babel(),
+      resolve({
+        only: ['joi']
+      }),
     ]
   },
   {
@@ -23,8 +25,10 @@ export default [
       name: 'webbitElementManifest'
     },
     plugins: [
-      resolve(),
       babel(),
+      resolve({
+        only: ['joi']
+      }),
       uglify()
     ]
   }
