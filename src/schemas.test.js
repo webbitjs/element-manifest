@@ -125,4 +125,210 @@ describe('schemas', () => {
       ).rejects.toThrow();
     });
   });
+
+  describe(`nameWithDescriptionSchema`, () => {
+    it(`accepts an array of objects with a name property of type'String' and optionally a description of type 'String'`, async () => {
+      const values = [
+        { name: 'name' }, 
+        { name: 'other name', description: 'description' }
+      ];
+      const expected = [
+        { name: 'name', description: '' }, 
+        { name: 'other name', description: 'description' }
+      ];
+      expect(
+        await nameWithDescriptionSchema.validateAsync(values)
+      ).toEqual(expected);
+    });
+
+    it(`doesn't accept names and descriptions that aren't of type 'String'`, async () => {
+      await expect(
+        testDefaultValueSchema.validateAsync([{ name: 3 }])
+      ).rejects.toThrow();
+
+      await expect(
+        testDefaultValueSchema.validateAsync([{ name: 'name', description: false }])
+      ).rejects.toThrow();
+    });
+
+    it(`doesn't accept objects without name properties`, async () => {
+      await expect(
+        testDefaultValueSchema.validateAsync([{ description: 'description' }])
+      ).rejects.toThrow();
+    });
+
+    it(`doesn't values that aren't of type 'Array'`, async () => {
+      await expect(
+        testDefaultValueSchema.validateAsync({ name: 3 })
+      ).rejects.toThrow();
+    });
+  });
+
+  describe(`attributesSchema`, () => {
+    it(`accepts an array of objects with required name and type properties and optional description and defaultValue properties`, async () => {
+      const values = [
+        { name: 'name', type: 'Boolean' }, 
+        { name: 'name2', type: 'Number', description: 'description', defaultValue: 4 },
+        { name: 'name3', type: 'String' }, 
+      ];
+      const expected = [
+        { name: 'name', type: 'Boolean', description: '', defaultValue: false }, 
+        { name: 'name2', type: 'Number', description: 'description', defaultValue: 4 },
+        { name: 'name3', type: 'String', description: '', defaultValue: '' }, 
+      ];
+      expect(
+        await attributesSchema.validateAsync(values)
+      ).toEqual(expected);
+    });
+
+    it(`doesn't accept properties with incorrect types`, async () => {
+      await expect(
+        attributesSchema.validateAsync([{ name: 'name', type: 'Boolean', defaultValue: 0 }])
+      ).rejects.toThrow();
+
+      await expect(
+        attributesSchema.validateAsync([{ name: 'name', type: 'Boolean', description: false }])
+      ).rejects.toThrow();
+
+      await expect(
+        attributesSchema.validateAsync([{ name: 'name', type: 'Moose' }])
+      ).rejects.toThrow();
+
+      await expect(
+        attributesSchema.validateAsync([{ name: 3, type: 'Boolean' }])
+      ).rejects.toThrow();
+    });
+
+    it(`doesn't accept objects without required properties`, async () => {
+      await expect(
+        attributesSchema.validateAsync([{ name: 'name' }])
+      ).rejects.toThrow();
+
+      await expect(
+        attributesSchema.validateAsync([{ type: 'Boolean' }])
+      ).rejects.toThrow();
+    });
+
+    it(`doesn't values that aren't of type 'Array'`, async () => {
+      await expect(
+        attributesSchema.validateAsync({ name: 'name', type: 'Boolean' })
+      ).rejects.toThrow();
+    });
+  });
+
+  describe(`propertiesSchema`, () => {
+    it(`accepts an array of objects with required name and type properties and optional description, defaultValue, attribute, reflect, primary and changeEvent properties`, async () => {
+      const values = [
+        { name: 'name', type: 'Boolean' }, 
+        { name: 'name2', type: 'Number', description: 'description', defaultValue: 3, attribute: 'name2', reflect: true, primary: true, changeEvent: 'nameChange' }
+      ];
+      const expected = [
+        { name: 'name', type: 'Boolean', description: '', defaultValue: false, attribute: false, reflect: false, primary: false, changeEvent: false }, 
+        { name: 'name2', type: 'Number', description: 'description', defaultValue: 3, attribute: 'name2', reflect: true, primary: true, changeEvent: 'nameChange' }
+      ];
+      expect(
+        await propertiesSchema.validateAsync(values)
+      ).toEqual(expected);
+    });
+
+    it(`doesn't accept properties with incorrect types`, async () => {
+      await expect(
+        propertiesSchema.validateAsync([{ name: 'name', type: 'Boolean', description: 3 }])
+      ).rejects.toThrow();
+
+      await expect(
+        propertiesSchema.validateAsync([{ name: 'name', type: 'Boolean', defaultValue: 3 }])
+      ).rejects.toThrow();
+
+      await expect(
+        propertiesSchema.validateAsync([{ name: 'name', type: 'Boolean', attribute: 3 }])
+      ).rejects.toThrow();
+
+      await expect(
+        propertiesSchema.validateAsync([{ name: 'name', type: 'Boolean', attribute: true }])
+      ).rejects.toThrow();
+
+      await expect(
+        propertiesSchema.validateAsync([{ name: 'name', type: 'Boolean', reflect: 3 }])
+      ).rejects.toThrow();
+
+      await expect(
+        propertiesSchema.validateAsync([{ name: 'name', type: 'Boolean', primary: 3 }])
+      ).rejects.toThrow();
+
+      await expect(
+        propertiesSchema.validateAsync([{ name: 'name', type: 'Boolean', changeEvent: 3 }])
+      ).rejects.toThrow();
+
+      await expect(
+        propertiesSchema.validateAsync([{ name: 'name', type: 'Boolean', changeEvent: true }])
+      ).rejects.toThrow();
+
+      await expect(
+        propertiesSchema.validateAsync([{ name: 'name', type: 'Turtle' }])
+      ).rejects.toThrow();
+
+      await expect(
+        propertiesSchema.validateAsync([{ name: 3, type: 'Boolean' }])
+      ).rejects.toThrow();
+    });
+
+    it(`doesn't accept objects without required properties`, async () => {
+      await expect(
+        propertiesSchema.validateAsync([{ name: 'name' }])
+      ).rejects.toThrow();
+
+      await expect(
+        propertiesSchema.validateAsync([{ type: 'Boolean' }])
+      ).rejects.toThrow();
+    });
+
+    it(`doesn't values that aren't of type 'Array'`, async () => {
+      await expect(
+        propertiesSchema.validateAsync({ name: 'name', type: 'Boolean' })
+      ).rejects.toThrow();
+    });
+  });
+
+  describe(`cssPropertiesSchema`, () => {
+    it(`accepts an array of objects with required name properties and optional description and defaultValue properties`, async () => {
+      const values = [
+        { name: '--name' }, 
+        { name: '--another-name', description: 'description', defaultValue: 'value' },
+      ];
+      const expected = [
+        { name: '--name', description: '', defaultValue: '' }, 
+        { name: '--another-name', description: 'description', defaultValue: 'value' },
+      ];
+      expect(
+        await cssPropertiesSchema.validateAsync(values)
+      ).toEqual(expected);
+    });
+
+    it(`doesn't accept properties with incorrect types`, async () => {
+      await expect(
+        cssPropertiesSchema.validateAsync([{ name: '--name', description: 0 }])
+      ).rejects.toThrow();
+
+      await expect(
+        cssPropertiesSchema.validateAsync([{ name: '--name', defaultValue: 0 }])
+      ).rejects.toThrow();
+
+      await expect(
+        cssPropertiesSchema.validateAsync([{ name: 3 }])
+      ).rejects.toThrow();
+    });
+
+    it(`doesn't accept objects without required properties`, async () => {
+      await expect(
+        cssPropertiesSchema.validateAsync([{ description: 'description' }])
+      ).rejects.toThrow();
+    });
+
+    it(`doesn't values that aren't of type 'Array'`, async () => {
+      await expect(
+        cssPropertiesSchema.validateAsync({ name: '--name' })
+      ).rejects.toThrow();
+    });
+  });
 });

@@ -7,7 +7,7 @@ export const kebabCaseSchema = Joi.string()
   .pattern(new RegExp('^([a-z][a-z0-9]*)(-[a-z0-9]+)*$'));
 
 export const camelCaseSchema = Joi.string()
-  .pattern(new RegExp('^[a-z]+((\d)|([A-Z0-9][a-z0-9]+))*([A-Z])?$'));
+  .pattern(new RegExp('^[a-z]+(([0-9])|([A-Z0-9][a-z0-9]+))*([A-Z])?$'));
 
 export const cssPropertyNameSchema = Joi.string()
   .pattern(new RegExp('^\-\-[a-z]+(\-[a-z]+)*$'));
@@ -44,12 +44,12 @@ export const propertiesSchema = Joi.array().items(
     type: typeSchema.required(),
     defaultValue: defaultValueSchema,
     attribute: Joi.alternatives()
-      .try(kebabCaseSchema, Joi.any().allow(false))
+      .try(kebabCaseSchema, Joi.boolean().valid(false))
       .default(false),
     reflect: Joi.boolean().default(false),
     primary: Joi.boolean().default(false),
     changeEvent: Joi.alternatives()
-      .try(Joi.string(), Joi.any().allow(false))
+      .try(Joi.string(), Joi.boolean().valid(false))
       .default(false)
   })
 );
