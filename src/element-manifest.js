@@ -1,36 +1,20 @@
+import { elementSchema } from './schemas';
 
 class Manifest {
   constructor(config) {
-
-    const {
-      name,
-      description,
-      attributes,
-      properties,
-      events,
-      slots,
-      cssProperties,
-      cssParts,
-    } = config;
-    
-    this.name = name;
-    this.description = description || '';
-    this.attributes = (attributes || []).map(attribute => ({
-      name: '',
-      type: '',
-      description: '',
-      default: '',
-      ...attribute,
-    }));
-    this.properties = (properties || []).map(property => ({
-      name: '',
-      description: '',
-      type: '',
-      attribute: false,
-
-      ...property,
-    }));
+    const { value, error } = elementSchema.validate(config);
+    if (error) {
+      throw new Error(error);
+    }
+    this.name = value.name;
+    this.description = value.description;
+    this.attributes = value.attributes;
+    this.properties = value.properties;
+    this.events = value.events;
+    this.slots = value.slots;
+    this.cssProperties = value.cssProperties;
+    this.cssParts = value.cssParts;
   }
-
-
 }
+
+export default Manifest;
