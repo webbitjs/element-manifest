@@ -331,4 +331,26 @@ describe('schemas', () => {
       ).rejects.toThrow();
     });
   });
+
+  describe(`elementSchema`, () => {
+    it(`accepts an array of objects with required name property and optional description, atttributes, properties, events, slots, cssProperties, and cssParts properties`, async () => {
+      const values = { name: 'some-element' };
+      const expected = { name: 'some-element', description: '', attributes: [], properties: [], events: [], slots: [], cssProperties: [], cssParts: [] };
+      expect(
+        await elementSchema.validateAsync(values)
+      ).toEqual(expected);
+    });
+
+    it(`doesn't accept objects without required properties`, async () => {
+      await expect(
+        elementSchema.validateAsync([{ description: 'description' }])
+      ).rejects.toThrow();
+    });
+
+    it(`doesn't values that aren't of type 'Object'`, async () => {
+      await expect(
+        elementSchema.validateAsync([{ name: 'some-element' }])
+      ).rejects.toThrow();
+    });
+  });
 });

@@ -63,12 +63,12 @@ export const cssPropertiesSchema = Joi.array().items(
 );
 
 export const elementSchema = Joi.object({
-  name: kebabCaseSchema,
+  name: kebabCaseSchema.required(),
   description: optionalStringSchema,
-  atttributes: attributesSchema,
-  properties: propertiesSchema,
-  events: nameWithDescriptionSchema,
-  slots: nameWithDescriptionSchema,
-  cssProperties: cssPropertiesSchema,
-  cssParts: nameWithDescriptionSchema,
+  attributes: attributesSchema.default([]),
+  properties: propertiesSchema.default([]),
+  events: nameWithDescriptionSchema.default([]),
+  slots: nameWithDescriptionSchema.default([]),
+  cssProperties: cssPropertiesSchema.default([]),
+  cssParts: nameWithDescriptionSchema.default([]),
 });
